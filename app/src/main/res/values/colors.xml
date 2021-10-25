@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#8b0000</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="background">#D2042D</color>
+    <color name="refreshButtonBackground">#000</color>
+    <color name="refreshButtonText">#FFF</color>
+    <color name="headerText">#FFF</color>
+    <color name="sourceText">#FFD700</color>
+    <color name="whiteText">#FFF</color>
+    <color name="progressBar">#FFF</color>
+    <color name="fullDetails">#89ECDA</color>
+</resources>

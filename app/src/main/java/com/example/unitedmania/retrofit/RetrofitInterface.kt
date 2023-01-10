@@ -1,6 +1,5 @@
 package com.example.unitedmania.retrofit
 
-import com.example.unitedmania.data.Article
 import com.example.unitedmania.data.News
 import retrofit2.http.GET
 import retrofit2.http.Query

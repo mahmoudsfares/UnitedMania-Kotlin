@@ -2,25 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/progressBar"
+        />
 
     <TextView
         android:id="@+id/text_view_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Couldn't load results" />
+        tools:text="Couldn't load results"
+        android:textColor="@color/whiteText"
+        />
 
     <Button
         android:id="@+id/button_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Retry" />
-
-
+        android:text="Retry"
+        tools:ignore="HardcodedText"
+        />
 </LinearLayout>

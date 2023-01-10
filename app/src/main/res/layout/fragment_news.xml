@@ -32,21 +32,31 @@
         android:id="@+id/error_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No results"
         android:textColor="@color/whiteText"
         android:layout_centerInParent="true"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="Error occurred!"
+        />
+
+    <Button
+        android:id="@+id/retryBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/error_tv"
+        app:layout_constraintStart_toStartOf="@+id/error_tv"
+        app:layout_constraintTop_toBottomOf="@+id/error_tv"
+        android:text="Retry"
+        tools:ignore="HardcodedText" />
 
     <ProgressBar
         android:id="@+id/loading_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

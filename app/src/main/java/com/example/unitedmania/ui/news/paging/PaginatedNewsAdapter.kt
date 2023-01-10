@@ -10,10 +10,6 @@ import com.example.unitedmania.data.Article
 import com.example.unitedmania.databinding.NewsListItemBinding
 import com.squareup.picasso.Picasso
 
-/**
- * displayed data is provided in type PagingData<T>, T being the type of the object that populates one list item, not a list of that type
- * data is provided to its final function submitData(lifecycle, PagingData<T>)
- */
 class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
     PagingDataAdapter<Article, NewsAdapterPaginated.NewsViewHolder>(NEWS_COMPARATOR) {
 
@@ -55,6 +51,7 @@ class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
             binding.title.text = article.title
 
             var details = article.details
+            // news details field always ends with these characters that indicates how many more characters are remaining
             val detailsStopPosition: Int = article.details.indexOf("[+")
             if (detailsStopPosition != -1)
                 details = article.details.substring(0, detailsStopPosition)
@@ -65,11 +62,8 @@ class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
 
     companion object {
         private val NEWS_COMPARATOR = object : DiffUtil.ItemCallback<Article>() {
-            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.title == newItem.title
-
-            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem == newItem
+            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean = oldItem.title == newItem.title
+            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean = oldItem == newItem
         }
     }
 }

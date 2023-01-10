@@ -1,5 +1,6 @@
 package com.example.unitedmania.ui.news.paging
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -7,7 +8,6 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.unitedmania.databinding.PagingErrorHeaderFooterBinding
-import retrofit2.HttpException
 import java.net.UnknownHostException
 
 /**
@@ -37,10 +37,11 @@ class PagingLoadStateAdapter(private val retry: () -> Unit) :
             }
         }
 
+        @SuppressLint("SetTextI18n")
         fun bind(loadState: LoadState) {
             binding.progressBar.isVisible = loadState is LoadState.Loading
-            binding.buttonRetry.isVisible = loadState is LoadState.Error && loadState !is LoadState.Loading
-            binding.textViewError.isVisible = loadState is LoadState.Error && loadState !is LoadState.Loading
+            binding.buttonRetry.isVisible = loadState is LoadState.Error
+            binding.textViewError.isVisible = loadState is LoadState.Error
             if (loadState is LoadState.Error) {
                 val error = loadState.error
                 if (error is UnknownHostException){
@@ -49,7 +50,10 @@ class PagingLoadStateAdapter(private val retry: () -> Unit) :
                 }
                 else {
                     binding.buttonRetry.isVisible = true
-                    binding.textViewError.text = "Error occurred."
+                    if(loadState.error.message == "timeout")
+                        binding.textViewError.text = "Connection timed out."
+                    else
+                        binding.textViewError.text = error.message
                 }
             }
         }

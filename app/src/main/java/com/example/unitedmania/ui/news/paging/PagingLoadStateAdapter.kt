@@ -26,7 +26,7 @@ class PagingLoadStateAdapter(private val retry: () -> Unit) :
     }
 
     override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
+        holder.setUi(loadState)
     }
 
     inner class LoadStateViewHolder(private val binding: PagingErrorHeaderFooterBinding) :
@@ -38,7 +38,7 @@ class PagingLoadStateAdapter(private val retry: () -> Unit) :
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(loadState: LoadState) {
+        fun setUi(loadState: LoadState) {
             binding.progressBar.isVisible = loadState is LoadState.Loading
             binding.buttonRetry.isVisible = loadState is LoadState.Error
             binding.textViewError.isVisible = loadState is LoadState.Error

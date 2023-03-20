@@ -25,66 +25,76 @@ import kotlin.concurrent.schedule
 class NewsFragment : Fragment(R.layout.fragment_news) {
 
     private val viewModel: NewsViewModel by viewModels()
+
+    private lateinit var binding: FragmentNewsBinding
+    private lateinit var newsAdapterPaginated: NewsAdapterPaginated
     private lateinit var newsLayoutManager: LinearLayoutManager
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentNewsBinding.bind(view)
-
-        viewModel.fetchNews()
+        binding = FragmentNewsBinding.bind(view)
 
         newsLayoutManager = LinearLayoutManager(context)
 
-        val newsAdapterPaginated = NewsAdapterPaginated(
-            onArticleClicked = {
-                val toDetailsIntent = Intent(Intent.ACTION_VIEW)
-                toDetailsIntent.data = Uri.parse(it.url)
-                startActivity(toDetailsIntent)
+        newsAdapterPaginated = NewsAdapterPaginated(
+            onArticleClicked = { article ->
+                goToDetails(article.url)
             }
         )
-
         newsAdapterPaginated.addLoadStateListener { loadState ->
-            binding.apply {
-                loadingSpinner.isVisible = loadState.source.refresh is LoadState.Loading
-                errorTv.isVisible = loadState.source.refresh is LoadState.Error
-                retryBtn.isVisible = loadState.source.refresh is LoadState.Error
-                retryBtn.setOnClickListener { viewModel.fetchNews() }
-                list.isVisible = loadState.source.refresh !is LoadState.Error && loadState.source.refresh is LoadState.NotLoading
-                if (loadState.source.refresh is LoadState.Error) {
-                    val error = (loadState.source.refresh as LoadState.Error).error
-                    if (error is UnknownHostException){
-                        errorTv.text = "No internet connection."
-                    }
-                    else {
-                        errorTv.text = error.message
-                    }
-                }
-            }
+            val state = loadState.source.refresh
+            setUiComponents(state)
         }
 
-        binding.list.apply {
-            layoutManager = newsLayoutManager
-            setHasFixedSize(true)
-            adapter = newsAdapterPaginated.withLoadStateHeaderAndFooter(
-                header = PagingLoadStateAdapter { newsAdapterPaginated.retry() },
-                footer = PagingLoadStateAdapter { newsAdapterPaginated.retry() }
-            )
-        }
-
+        viewModel.fetchNews()
         lifecycleScope.launchWhenStarted {
             viewModel.news.collect {
                 newsAdapterPaginated.submitData(viewLifecycleOwner.lifecycle, it!!)
                 newsLayoutManager.scrollToPosition(0)
             }
         }
+    }
 
-        binding.refresher.setColorSchemeResources(R.color.background)
-        binding.refresher.setOnRefreshListener {
-            Timer().schedule(1000) {
-                viewModel.fetchNews()
-                binding.refresher.isRefreshing = false
+    @SuppressLint("SetTextI18n")
+    private fun setUiComponents(state: LoadState){
+        binding.apply {
+            loadingSpinner.isVisible = state is LoadState.Loading
+
+            errorTv.isVisible = state is LoadState.Error
+            retryBtn.isVisible = state is LoadState.Error
+            retryBtn.setOnClickListener { viewModel.fetchNews() }
+            if (state is LoadState.Error) {
+                val error = state.error
+                if (error is UnknownHostException) {
+                    errorTv.text = "No internet connection."
+                } else {
+                    errorTv.text = error.message
+                }
+            }
+
+            newsRecyclerView.isVisible = state !is LoadState.Error && state is LoadState.NotLoading
+            newsRecyclerView.apply {
+                layoutManager = newsLayoutManager
+                setHasFixedSize(true)
+                adapter = newsAdapterPaginated.withLoadStateHeaderAndFooter(
+                    header = PagingLoadStateAdapter { newsAdapterPaginated.retry() },
+                    footer = PagingLoadStateAdapter { newsAdapterPaginated.retry() }
+                )
+            }
+            newsRefresher.setColorSchemeResources(R.color.background)
+            newsRefresher.setOnRefreshListener {
+                Timer().schedule(1000) {
+                    viewModel.fetchNews()
+                    binding.newsRefresher.isRefreshing = false
+                }
             }
         }
+    }
+
+    private fun goToDetails(url: String) {
+        val toDetailsIntent = Intent(Intent.ACTION_VIEW)
+        toDetailsIntent.data = Uri.parse(url)
+        startActivity(toDetailsIntent)
     }
 }

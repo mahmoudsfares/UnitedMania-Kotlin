@@ -1,7 +1,7 @@
 package com.example.unitedmania.dependency_injection
 
 import com.example.unitedmania.BuildConfig
-import com.example.unitedmania.retrofit.RetrofitInterface
+import com.example.unitedmania.data_sources.RetrofitInterface
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

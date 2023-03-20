@@ -20,7 +20,7 @@ class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val currentItem = getItem(position)
-        currentItem?.let { holder.bind(it) }
+        currentItem?.let { article -> holder.setUi(article) }
     }
 
     inner class NewsViewHolder(
@@ -30,33 +30,38 @@ class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
-                // to avoid a crash if u click on an item while it is animating off the screen
-                if (position != RecyclerView.NO_POSITION) {
-                    val clickedItem = getItem(bindingAdapterPosition)
-                    if (clickedItem != null) {
-                        onArticleClicked(clickedItem)
+                val clickedPosition = bindingAdapterPosition
+                // to avoid a crash if an item was clicked while it is animating off the screen
+                if (clickedPosition != RecyclerView.NO_POSITION) {
+                    val clickedNews = getItem(bindingAdapterPosition)
+                    if (clickedNews != null) {
+                        onArticleClicked(clickedNews)
                     }
                 }
             }
         }
 
-        fun bind(article: Article) {
+        fun setUi(article: Article) {
             Picasso.get()
                 .load(article.imageUrl)
                 .fit()
                 .placeholder(R.drawable.placeholder)
                 .into(binding.image)
-            binding.source.text = article.source.source
+            binding.source.text = article.source.sourceName
             binding.title.text = article.title
+            binding.details.text = filterDetails(article.details)
+        }
 
-            var details = article.details
-            // news details field always ends with these characters that indicates how many more characters are remaining
-            val detailsStopPosition: Int = article.details.indexOf("[+")
-            if (detailsStopPosition != -1)
-                details = article.details.substring(0, detailsStopPosition)
-
-            binding.details.text = details
+        private fun filterDetails(unfilteredDetails: String): String {
+            // news details field always ends with these characters
+            // that indicate how many more characters are remaining
+            val detailsStopPosition: Int = unfilteredDetails.indexOf("[+")
+            return if (detailsStopPosition != -1) {
+                val details = unfilteredDetails.substring(0, detailsStopPosition)
+                details
+            } else {
+                "Click to see more.."
+            }
         }
     }
 
@@ -66,4 +71,6 @@ class NewsAdapterPaginated(private val onArticleClicked: (Article) -> Unit) :
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean = oldItem == newItem
         }
     }
+
+
 }

@@ -5,8 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.example.unitedmania.retrofit.RetrofitInterface
-import com.example.unitedmania.ui.news.paging.NewsPagingSource
+import com.example.unitedmania.data_sources.RetrofitInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -36,7 +35,7 @@ class NewsViewModel @Inject constructor(private val retrofitInterface: RetrofitI
     val news = newsFlow.flatMapLatest {
         Pager(
             config = PagingConfig(PAGE_SIZE, MAX_SIZE, false),
-            pagingSourceFactory = { NewsPagingSource(retrofitInterface) }
+            pagingSourceFactory = { NewsRepo(retrofitInterface) }
         ).flow.cachedIn(viewModelScope)
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
 }

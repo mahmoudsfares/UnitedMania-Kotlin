@@ -1,4 +1,4 @@
-package com.example.unitedmania.retrofit
+package com.example.unitedmania.data_sources
 
 import com.example.unitedmania.data.News
 import retrofit2.http.GET

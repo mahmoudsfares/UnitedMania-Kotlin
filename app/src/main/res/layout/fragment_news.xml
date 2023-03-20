@@ -9,7 +9,7 @@
     tools:context=".ui.news.NewsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresher"
+        android:id="@+id/news_refresher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,16 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
+            android:id="@+id/news_recycler_view"
             android:layout_below="@+id/header"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
     <TextView
         android:id="@+id/error_tv"

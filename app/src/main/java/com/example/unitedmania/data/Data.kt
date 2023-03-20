@@ -7,7 +7,7 @@ data class News(
 )
 
 data class ArticleSource(
-    @SerializedName("name") val source: String? = null
+    @SerializedName("name") val sourceName: String? = null
 )
 
 data class Article(
